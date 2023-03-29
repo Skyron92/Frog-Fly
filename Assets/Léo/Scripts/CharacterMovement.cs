@@ -4,6 +4,7 @@ using UnityEngine.InputSystem;
 public class CharacterMovement : MonoBehaviour
 {
     private CharacterController _controller;
+    private Rigidbody _rigidbody;
 
     [Range(0,100)] public float speed = 5.0f;
 
@@ -12,6 +13,7 @@ public class CharacterMovement : MonoBehaviour
     private void Awake() {
         _controller = GetComponent<CharacterController>();
         moveAction.action.Enable();
+        _rigidbody = GetComponent<Rigidbody>();
     }
 
     private void OnDisable() {
@@ -20,11 +22,10 @@ public class CharacterMovement : MonoBehaviour
 
     private void Update() {
         Movement();
-        _controller.enabled = !Grapple.isGrappling;
+        if(!Grapple.isMovingByGrapple && _controller.isGrounded) _rigidbody.velocity = Vector3.zero;
     }
 
     private void Movement() {
-        if(Grapple.isGrappling) return;
         if(!moveAction.action.IsPressed()) return;
         Vector2 move = moveAction.action.ReadValue<Vector2>();
 

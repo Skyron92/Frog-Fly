@@ -55,12 +55,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   grappleSpeed: 40
   maxDistance: 10
-  grappleMask:
+  grappleWall:
     serializedVersion: 2
-    m_Bits: 2147483647
+    m_Bits: 128
+  grappleObject:
+    serializedVersion: 2
+    m_Bits: 256
   tongueTarget: {fileID: 766838063232849947}
   tongueOrigin: {fileID: 2080539204942355951}
   tongueLineRenderer: {fileID: 2172032462097191098}
+  springConstant: 100
+  damping: 5
 --- !u!114 &4961613044369551913
 MonoBehaviour:
   m_ObjectHideFlags: 0
