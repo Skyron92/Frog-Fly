@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class Grapple : MonoBehaviour
 {
@@ -8,6 +9,10 @@ public class Grapple : MonoBehaviour
     [SerializeField] private Transform tongueTarget;
     [SerializeField] private Transform tongueOrigin;
     [SerializeField] private LineRenderer tongueLineRenderer;
+    [SerializeField] private InputActionReference grabInputActionReference;
+    [SerializeField] private InputActionReference trackInputActionReference;
+    private InputAction GrabInputAction => grabInputActionReference.action;
+    private InputAction TrackInputAction => trackInputActionReference.action;
     private bool _isGrappling;
     public static bool isMovingByGrapple;
     private bool _isGrapplingAWall;
@@ -18,12 +23,24 @@ public class Grapple : MonoBehaviour
     public float springConstant = 100f;
     public float damping = 5f;
 
-    private Vector3 velocity = Vector3.zero;
+    private Vector3 _velocity = Vector3.zero;
+
+    private void Awake()
+    {
+        GrabInputAction.Enable();
+        GrabInputAction.performed += context => StartGrapple();
+        GrabInputAction.canceled += context => StopGrapple();
+        GrabInputAction.canceled += context => isMovingByGrapple = false;
+        
+        TrackInputAction.Enable();
+        TrackInputAction.performed += context => isMovingByGrapple = _isGrappling;
+        TrackInputAction.canceled += context => isMovingByGrapple = !_isGrappling;
+    }
 
     private void Update() {
         tongueLineRenderer.enabled = _isGrappling;
         tongueTarget.gameObject.SetActive(_isGrappling);
-        if (Input.GetButtonDown("Fire1")) {
+       /* if (Input.GetButtonDown("Fire1")) {
             StartGrapple();
         }
         else if (Input.GetButtonUp("Fire1")) {
@@ -38,11 +55,11 @@ public class Grapple : MonoBehaviour
             if (Input.GetButtonUp("Fire2") && _isGrappling) {
                 isMovingByGrapple = false;
             }
-        }
+        }*/
 
         if (IsOutOfRange) {
             if(!_isGrapplingAWall) ElasticMove(_target, transform);
-            else StopGrapple();
+            else ElasticMove(transform, _target);
         }
     }
 
@@ -84,10 +101,10 @@ public class Grapple : MonoBehaviour
         Vector3 displacement = target.position - mover.position;
         Vector3 force = displacement * springConstant;
         Vector3 acceleration = force / GetComponent<Rigidbody>().mass;
-        velocity += acceleration * Time.deltaTime;
-        Vector3 dampingForce = -velocity * damping;
-        velocity += dampingForce * Time.deltaTime;
-        Vector3 position = mover.position + velocity * Time.deltaTime;
+        _velocity += acceleration * Time.deltaTime;
+        Vector3 dampingForce = -_velocity * damping;
+        _velocity += dampingForce * Time.deltaTime;
+        Vector3 position = mover.position + _velocity * Time.deltaTime;
         mover.position = Vector3.Lerp(mover.position, position, Time.deltaTime * 10f);
         mover.localScale = Vector3.Lerp(mover.localScale, target.localScale, Time.deltaTime * 10f);
     }

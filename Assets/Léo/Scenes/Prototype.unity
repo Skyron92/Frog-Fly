@@ -1162,6 +1162,18 @@ PrefabInstance:
       propertyPath: m_Parameters.widthCurve.m_Curve.Array.data[1].outSlope
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6226014284860350820, guid: 13e8487168822da41b6c1ea93521f266,
+        type: 3}
+      propertyPath: grabInputActionReference
+      value: 
+      objectReference: {fileID: -4395728038072632385, guid: 4d4b52c17901af949801567aaad4e7bb,
+        type: 3}
+    - target: {fileID: 6226014284860350820, guid: 13e8487168822da41b6c1ea93521f266,
+        type: 3}
+      propertyPath: trackInputActionReference
+      value: 
+      objectReference: {fileID: 8363112542648430643, guid: 4d4b52c17901af949801567aaad4e7bb,
+        type: 3}
     - target: {fileID: 8592802693557067335, guid: 13e8487168822da41b6c1ea93521f266,
         type: 3}
       propertyPath: m_LocalScale.x
